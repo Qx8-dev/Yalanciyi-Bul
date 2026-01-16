@@ -1,0 +1,119 @@
+body {
+	font-family: sans-serif;
+	background-color: #f0f4f8;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	margin: 0;
+}
+
+.box {
+	background: white;
+	padding: 2rem;
+	border-radius: 10px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	text-align: center;
+}
+
+#gameExplanationModal {
+	background-color: #f9f9f9;     /* Arka plan rengi */
+	border: 1px solid #ddd;
+	border-radius: 8px;     /* Köşeleri yuvarlatma */
+	padding: 20px;
+	max-width: 600px;     /* Maksimum genişlik */
+	font-family: sans-serif;
+	line-height: 1.6;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);     /* Hafif gölge */
+}
+
+/* Arka plandaki karartma */
+.modal-overlay {
+    display: none; /* Başlangıçta GİZLİ */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Yarı saydam siyah */
+    justify-content: center; /* Yatay ortala */
+    align-items: center;     /* Dikey ortala */
+    z-index: 1000;           /* En üstte dursun */
+}
+
+/* Beyaz kutu */
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+#bilgiyazisi {
+	text-align: center;
+	margin: 0 auto;
+	background: none;     /* Arka plan rengini kaldır */
+	border: none;     /* Çerçeveyi kaldır */
+	font: inherit;     /* Font ailesini ve boyutunu bulunduğu yerden al */
+	color: blue;     /* Metin rengini bulunduğu yerden al */
+	cursor: pointer;     /* Üzerine gelince el işareti çıksın (Span'da bu yoktur ama buton için gereklidir) */
+	text-decoration: underline;     /* Alt çizgiyi kaldır (Varsa) */
+	appearance: none;
+	display: block;
+	margin-top: 15px;
+	margin-bottom: 10px;
+	padding: 0px;
+}
+
+#mesaj {
+	margin-bottom: 0px;
+}
+
+button {
+	background-color: #0070f3;
+	color: white;
+	border: none;
+	padding: 10px 20px 10px 20px;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 16px;
+	margin-top: 0px;
+}
+
+button:hover {
+	background-color: #0051a2;
+}
+#baslat-btn {
+	padding: 12.5px 20px 12.5px 20px;
+	text-align: center;
+	flex: 1;
+}
+.tiklanabilir {
+	color: blue;     /* Link gibi görünmesi için mavi yapabilirsin */
+	text-decoration: underline;     /* Altını çizebilirsin */
+	cursor: pointer;     /* EN ÖNEMLİSİ: Fare üzerine gelince el işareti çıkar */
+
+	/*font-weight: bold;  */
+
+	/* İstersen kalın yap */
+}
+
+.tiklanabilir:hover {
+	color: darkblue;     /* Üzerine gelince rengi koyulaşsın */
+}
+
+.button-container {
+	display: flex;           /* İçindekileri yan yana dizer */
+    justify-content: center; /* Yatayda ortalar */
+    align-items: center;     /* Dikey hizayı eşitler */
+    gap: 10px;               /* İki buton arasına boşluk bırakır */
+    margin-top: 20px;        /* Üstteki yazıdan biraz uzaklaştırır */
+}
+/*
+li:hover {
+	cursor: pointer;
+	color: red;
+}
+*/

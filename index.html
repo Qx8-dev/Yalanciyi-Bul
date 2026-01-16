@@ -1,0 +1,68 @@
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yalancıyı Bul!</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=settings" />
+</head>
+<body>
+    <div class="box">
+        <h1>Yalancıyı Bul!</h1>
+        <p id="mesaj">
+            Yalancı hariç herkes gizli kelimeyi biliyor.<br>Amacınız yalancıyı bir kelimelik ipucular üzerinden ifşa etmek.<br>Oyun sonu oylama ile yalancıyı tahmin edeceksiniz.
+            <br><button id="bilgiYazisi" class="tiklanabilir">Daha fazla detay →</button>
+        </p>
+        <dialog id="gameExplanationModal">
+        <h2>Yalancıyı Bul Kelime Oyunu Nedir?</h2>
+            <p>
+                Bu oyun, yaratıcılık ve blöf yeteneğinizi test eden bir topluluk oyunudur. 
+                Oyunculara gizli bir kelime verilirken, aralarından bir kişi (Yalancı) bu kelimeyi göremez.
+            </p> 
+            <ul style="text-align: left;">
+                <li>
+                    <strong>Oyunun Amacı:</strong> Masum oyuncular, Yalancı'nın kim olduğunu bulmaya çalışırken; 
+                    Yalancı, kimliğini gizleyerek gizli kelimeyi tahmin etmeye çalışır.
+                </li>
+                <li>
+                    <strong>Nasıl Oynanır?</strong> Her oyuncu sırayla gizli kelimeyle ilgili tek kelimelik bir ipucu verir. 
+                    İpucunuz çok açık olursa Yalancı kelimeyi bulur, çok kapalı olursa arkadaşlarınız sizin Yalancı olduğunuzu sanabilir.
+                </li>
+                <li>
+                    <strong>Sonuç:</strong> Oyun belirlenen tur sayısı kadar oynanır. Oylama sonunda Yalancı doğru tahmin edilirse Masumlar kazanır. Ancak Yalancı yakalanmazsa veya gizli kelimeyi doğru tahmin ederse, kazanan Yalancı olur.
+                </li>
+            </ul>
+            <button id="kapatButonu">Kapat</button>
+        </dialog>
+        <div class="button-container">
+            <button id="baslat-btn"onclick="mesajiDegistir()">Başlat</button>
+            <button class="ayarlar-btn">
+                <span class="material-symbols-outlined">
+                    settings
+                </span>
+            </button>
+        </div>
+        <div id="modalSettings" class="modal-overlay">
+            <div class="modal-content">
+                <h3>Ayarlar</h3>
+                <p>Oyuncu Sayısı vb.</p>
+                <button class="close-btn" data-target="modalSettings">Kapat</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+<!--
+     Debug için eruda kütüphanesini ekleyin
+     1. Yorum satırını kaldırın
+     2. Sayfayı yenileyin
+     3. Sağ alt köşede eruda simgesi görünecektir
+     4. Tekrar yorum satırı yaparak kaldırabilirsiniz
+-->
+<!--
+    <script src="//cdn.jsdelivr.net/npm/eruda"></script>
+    <script>
+        eruda.init();
+    </script>
+-->
+</body>
+</html>
