@@ -1,68 +1,168 @@
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yalancıyı Bul!</title>
+    <title data-tr="Yalancıyı Bul!" data-eng="Find the Liar!">Yalancıyı Bul!</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=settings" />
+    <script>
+        const temporaryTheme = localStorage.getItem("theme") ? localStorage.getItem("theme") : "light"
+        if (temporaryTheme === "dark") {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem("theme", "dark");
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+            localStorage.setItem("theme", "light");
+        }
+    </script>
 </head>
 <body>
+    <div class="site-settings">
+        <div id="darkmode-container">
+            <label for="darkmode-checkbox" data-tr="Karanlık Mod :" data-eng="Dark Mode :">Karanlık Mod : </label>
+            <input type="checkbox" id="darkmode-checkbox">
+        </div>
+        <div id="language-container">
+            <label for="language-select" data-tr="Dil :" data-eng="Language :">Dil : </label>
+            <select id="language-select">
+                <option value="tr" selected>Türkçe</option>
+                <option value="eng">English</option>
+            </select>
+        </div>
+    </div>
     <div class="box">
-        <h1>Yalancıyı Bul!</h1>
-        <p id="mesaj">
+        <h1 data-tr="Yalancıyı Bul!" data-eng="Find the Liar!">Yalancıyı Bul!</h1>
+        
+        <p id="game-description" 
+           style="margin-bottom: 15px;"
+           data-tr="Yalancı hariç herkes gizli kelimeyi biliyor.<br>Amacınız yalancıyı bir kelimelik ipucular üzerinden ifşa etmek.<br>Oyun sonu oylama ile yalancıyı tahmin edeceksiniz." 
+           data-eng="Everyone knows the secret word except the Liar.<br>Your goal is to reveal the liar through one-word clues.<br>You will guess the liar by voting at the end of the game.">
             Yalancı hariç herkes gizli kelimeyi biliyor.<br>Amacınız yalancıyı bir kelimelik ipucular üzerinden ifşa etmek.<br>Oyun sonu oylama ile yalancıyı tahmin edeceksiniz.
-            <br><button id="bilgiYazisi" class="tiklanabilir">Daha fazla detay →</button>
         </p>
-        <dialog id="gameExplanationModal">
-        <h2>Yalancıyı Bul Kelime Oyunu Nedir?</h2>
-            <p>
+
+        <button id="bilgiYazisi" class="tiklanabilir trigger-modal" data-target="modal-info" 
+                data-tr="Daha fazla detay →" data-eng="More details →">
+            Daha fazla detay →
+        </button>
+
+        <dialog class="modal" id="modal-info">
+            <h2 data-tr="Yalancıyı Bul Kelime Oyunu Nedir?" data-eng="What is Find the Liar Word Game?">Yalancıyı Bul Kelime Oyunu Nedir?</h2>
+            <p data-tr="Bu oyun, yaratıcılık ve blöf yeteneğinizi test eden bir topluluk oyunudur. Oyunculara gizli bir kelime verilirken, aralarından bir kişi (Yalancı) bu kelimeyi göremez." 
+               data-eng="This is a community game that tests your creativity and bluffing skills. While players are given a secret word, one person (the Liar) among them cannot see this word.">
                 Bu oyun, yaratıcılık ve blöf yeteneğinizi test eden bir topluluk oyunudur. 
                 Oyunculara gizli bir kelime verilirken, aralarından bir kişi (Yalancı) bu kelimeyi göremez.
             </p> 
             <ul style="text-align: left;">
                 <li>
-                    <strong>Oyunun Amacı:</strong> Masum oyuncular, Yalancı'nın kim olduğunu bulmaya çalışırken; 
-                    Yalancı, kimliğini gizleyerek gizli kelimeyi tahmin etmeye çalışır.
+                    <strong data-tr="Oyunun Amacı:" data-eng="Objective:">Oyunun Amacı:</strong> 
+                    <span data-tr="Masum oyuncular, Yalancı'nın kim olduğunu bulmaya çalışırken; Yalancı, kimliğini gizleyerek gizli kelimeyi tahmin etmeye çalışır." 
+                          data-eng="Innocent players try to find out who the Liar is, while the Liar tries to guess the secret word by hiding their identity.">
+                        Masum oyuncular, Yalancı'nın kim olduğunu bulmaya çalışırken; 
+                        Yalancı, kimliğini gizleyerek gizli kelimeyi tahmin etmeye çalışır.
+                    </span>
                 </li>
                 <li>
-                    <strong>Nasıl Oynanır?</strong> Her oyuncu sırayla gizli kelimeyle ilgili tek kelimelik bir ipucu verir. 
-                    İpucunuz çok açık olursa Yalancı kelimeyi bulur, çok kapalı olursa arkadaşlarınız sizin Yalancı olduğunuzu sanabilir.
+                    <strong data-tr="Nasıl Oynanır?" data-eng="How to Play?">Nasıl Oynanır?</strong> 
+                    <span data-tr="Her oyuncu sırayla gizli kelimeyle ilgili tek kelimelik bir ipucu verir. İpucunuz çok açık olursa Yalancı kelimeyi bulur, çok kapalı olursa arkadaşlarınız sizin Yalancı olduğunuzu sanabilir." 
+                          data-eng="Each player takes turns giving a one-word clue about the secret word. If your clue is too obvious, the Liar finds the word; if it's too vague, your friends might think you are the Liar.">
+                        Her oyuncu sırayla gizli kelimeyle ilgili tek kelimelik bir ipucu verir. 
+                        İpucunuz çok açık olursa Yalancı kelimeyi bulur, çok kapalı olursa arkadaşlarınız sizin Yalancı olduğunuzu sanabilir.
+                    </span>
                 </li>
                 <li>
-                    <strong>Sonuç:</strong> Oyun belirlenen tur sayısı kadar oynanır. Oylama sonunda Yalancı doğru tahmin edilirse Masumlar kazanır. Ancak Yalancı yakalanmazsa veya gizli kelimeyi doğru tahmin ederse, kazanan Yalancı olur.
+                    <strong data-tr="Sonuç:" data-eng="Result:">Sonuç:</strong> 
+                    <span data-tr="Oyun belirlenen tur sayısı kadar oynanır. Oylama sonunda Yalancı doğru tahmin edilirse Masumlar kazanır. Ancak Yalancı yakalanmazsa veya gizli kelimeyi doğru tahmin ederse, kazanan Yalancı olur." 
+                          data-eng="The game is played for a set number of rounds. If the Liar is guessed correctly after voting, Innocents win. However, if the Liar is not caught or guesses the secret word correctly, the Liar wins.">
+                        Oyun belirlenen tur sayısı kadar oynanır. Oylama sonunda Yalancı doğru tahmin edilirse Masumlar kazanır. Ancak Yalancı yakalanmazsa veya gizli kelimeyi doğru tahmin ederse, kazanan Yalancı olur.
+                    </span>
                 </li>
             </ul>
-            <button id="kapatButonu">Kapat</button>
+            <button class="closemodal-btn" data-target="modal-info" data-tr="Kapat" data-eng="Close">Kapat</button>
         </dialog>
+
         <div class="button-container">
-            <button id="baslat-btn"onclick="mesajiDegistir()">Başlat</button>
-            <button class="ayarlar-btn">
-                <span class="material-symbols-outlined">
-                    settings
-                </span>
+            <button class="trigger-modal" id="start-btn" data-target="modal-game" data-tr="Başlat" data-eng="Start">Başlat</button>
+            <button class="trigger-modal" data-target="modal-settings">
+                <span class="material-symbols-outlined">settings</span>
             </button>
         </div>
-        <div id="modalSettings" class="modal-overlay">
-            <div class="modal-content">
-                <h3>Ayarlar</h3>
-                <p>Oyuncu Sayısı vb.</p>
-                <button class="close-btn" data-target="modalSettings">Kapat</button>
+
+        <dialog class="modal" id="modal-game" oncancel="event.preventDefault()">
+            <div id="game-container">
+                <!--<h2 data-tr="Yalancıyı Bul" data-eng="Find the Liar" style="text-align: left; margin:0px;">Yalancıyı Bul</h2>-->
+                <h2 hidden id="turn-info" data-tr="Defaultuser'ın sırası" data-eng="Defaultuser's turn" style="text-align: center;">turntext</h2>
+                <span hidden id="word-info" data-tr="Kelimen: " data-eng="Your word: "style="text-align: center;"></span>
+                <span hidden id="hint-info" data-tr="İpucu: " data-eng="Your hint: "style="text-align: center;"></span>
+                <button id="game-btn" data-state="showWord" data-tr="Kelimeni göster" data-eng="Show the word"style="text-align: center;"></button>
             </div>
-        </div>
+        </dialog>
+
+        <dialog class="modal" id="modal-settings">
+            <div>
+                <h2 data-tr="Oyun Ayarları" data-eng="Game Settings">Oyun Ayarları</h2>
+                <h3 data-tr="Oyuncu Ayarları" data-eng="Player Settings">Oyuncu Ayarları</h3>
+                <ul class="settings-list">
+                    <li class="counter-wrapper">
+                        <span data-tr="Oyuncu sayısı :" data-eng="Player count :">Oyuncu sayısı :</span> 
+                        <button class="counter-btn counter-increase-btn" data-target="players">+</button>
+                        <span class="counter-value" id="counter-value-players" data-target="players">4</span>
+                        <button class="counter-btn counter-decrease-btn" data-target="players">-</button> 
+                    </li>
+                    <li class="counter-wrapper" id="liar-counter">
+                        <span data-tr="Yalancı sayısı :" data-eng="Imposter count :">Yalancı sayısı :</span> 
+                        <button class="counter-btn counter-increase-btn" data-target="imposters">+</button>
+                        <span class="counter-value" id="counter-value-imposters" data-target="imposters">1</span>
+                        <button class="counter-btn counter-decrease-btn" data-target="imposters">-</button> 
+                    </li>
+                    <li>
+                        <input type="checkbox" id="checkbox-rotate-starting-player" class="settings-checkbox" checked> 
+                        <label for="checkbox-rotate-starting-player" data-tr="Her turda başlangıç oyuncusunu değiştir" data-eng="Rotate starting player every round">Her turda başlangıç oyuncusunu değiştir</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="checkbox-imposter-clue" class="settings-checkbox" checked> 
+                        <label for="checkbox-imposter-clue" data-tr="Yalancı'ya ipucu ver" data-eng="Give hint to Imposter">Yalancı'ya ipucu ver</label>
+                    </li>
+                </ul>
+                <h3 data-tr="Kategori Seçimi" data-eng="Select Category">Kategori Seçimi</h3>
+                <ul class="settings-list">
+                    <li><input type="checkbox" id="category-food" class="category-checkbox settings-checkbox" checked> <label for="category-food" data-tr="Yiyecek" data-eng="Food">Yiyecek</label></li>
+                    <li><input type="checkbox" id="category-animals" class="category-checkbox settings-checkbox" checked> <label for="category-animals" data-tr="Hayvanlar" data-eng="Animals">Hayvanlar</label></li>
+                    <li><input type="checkbox" id="category-sports" class="category-checkbox settings-checkbox" checked> <label for="category-sports" data-tr="Spor" data-eng="Sports">Spor</label></li>
+                    <li><input type="checkbox" id="category-professions" class="category-checkbox settings-checkbox"> <label for="category-professions" data-tr="Meslekler" data-eng="Professions">Meslekler</label></li>
+                    <li><input type="checkbox" id="category-countries" class="category-checkbox settings-checkbox"> <label for="category-countries" data-tr="Ülkeler" data-eng="Countries">Ülkeler</label></li>
+                    <li><input type="checkbox" id="category-technology" class="category-checkbox settings-checkbox"> <label for="category-technology" data-tr="Teknoloji" data-eng="Technology">Teknoloji</label></li>
+                    <li><input type="checkbox" id="category-home" class="category-checkbox settings-checkbox"> <label for="category-home" data-tr="Ev Eşyaları" data-eng="Home Items">Ev Eşyaları</label></li>
+                    <li><input type="checkbox" id="category-transportation" class="category-checkbox settings-checkbox"> <label for="category-transportation" data-tr="Ulaşım" data-eng="Transportation">Ulaşım</label></li>
+                    <li><input type="checkbox" id="category-turkey_cities" class="category-checkbox settings-checkbox"> <label for="category-turkey_cities" data-tr="Türkiye Şehirleri" data-eng="Cities of Turkey">Türkiye Şehirleri</label></li>
+                    <li><input type="checkbox" id="category-university_departments" class="category-checkbox settings-checkbox"> <label for="category-university_departments" data-tr="Üniversite Bölümleri" data-eng="University Departments">Üniversite Bölümleri</label></li>
+                    <li><input type="checkbox" id="category-clash_royale_cards" class="category-checkbox settings-checkbox"> <label for="category-clash_royale_cards" data-tr="Clash Royale Kartları" data-eng="Clash Royale Cards">Clash Royale Kartları</label></li>
+                </ul>
+                <button class="closemodal-btn" data-target="modal-settings" data-tr="Kapat" data-eng="Close">Kapat</button>
+            </div>
+        </dialog>
+    <button id="version-text" class="tiklanabilir trigger-modal" data-target="modal-changelog" data-tr="V1.0.0 - Daha fazla bilgi için tıkla " data-eng="V1.0.0 - Click to see more information">
+        V1.0.0 
+    </button>
+    <div id="changelog-container">
+        <dialog class="modal" id="modal-changelog">
+                <h1 data-tr="Değişiklik Günlüğü" data-eng="Changelog">Değişiklik Günlüğü</h1>
+                <div style="max-height: 400px; text-align: left; padding-bottom:0px;" class="changelog-entry">
+                    <h2>v1.0.0</h2>
+                    <h3 data-tr="İlk sürüm yayınlandı. Oyunun önemli özellikleri aşağıda :" data-eng="Initial release">İlk sürüm yayınlandı</h3>
+                    <ul>
+                        <li data-tr="Temel 'Yalancıyı Bul' oyun mekanikleri eklendi" data-eng="Core 'Find the Imposter' game mechanics implemented">Yalancıyı bulma kelime oyunu mekanikleri</li>
+                        <li data-tr="Türkçe ve İngilizce dil desteği sağlandı" data-eng="Added support for Turkish and English languages">Türkçe ve İngilizce dil desteği eklendi</li>
+                        <li data-tr="3 ila 10 oyuncu ile birlikte oynama desteği" data-eng="Support for playing with 3 to 10 players">3'ten 10'a kadar kişiyle oynama desteği</li>
+                        <li data-tr="Ayarlanabilir yalancı sayısı" data-eng="Adjustable number of imposters">Değiştirilebilir yalancı sayısı</li>
+                        <li data-tr="Özelleştirilebilir oyun ayarları (kategoriler ve kurallar)" data-eng="Customizable game settings (categories and rules)">Özelleştirilebilir Oyun ayarları</li>
+                        <li data-tr="Karanlık mod desteği" data-eng="Dark mode support">Karanlık mod desteği</li>
+                    </ul>
+                </div>
+                <button id="version-closemodal" class="closemodal-btn" style="text-align:center;"data-target="modal-changelog" data-tr="Kapat" data-eng="Close">Kapat</button>
+        </dialog>
     </div>
-    <script src="script.js"></script>
-<!--
-     Debug için eruda kütüphanesini ekleyin
-     1. Yorum satırını kaldırın
-     2. Sayfayı yenileyin
-     3. Sağ alt köşede eruda simgesi görünecektir
-     4. Tekrar yorum satırı yaparak kaldırabilirsiniz
--->
-<!--
-    <script src="//cdn.jsdelivr.net/npm/eruda"></script>
-    <script>
-        eruda.init();
-    </script>
--->
+</div>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
