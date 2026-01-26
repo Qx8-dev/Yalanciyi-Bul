@@ -6,9 +6,11 @@ const siteSettings = {
 };
 
 let gameSettings = {
+    version: "v1.0.0-beta2",
     sfxVolume: 80,
     rotatePlayerOrder: true,
     impostorClue: true,
+    impostersSeeOtherImposters: false,
     food:true,
     animals:true,
     sports:true,
@@ -19,7 +21,8 @@ let gameSettings = {
     transportation:false,
     turkey_cities:false,
     university_departments:false,
-    clash_royale_cards:false
+    clash_royale_cards:false,
+    historical_figures:false
 };
 
 function getCounterValue(counterId) {
@@ -65,12 +68,23 @@ function getImposters() {
 const theWord = {word:"notselectedyet", categorytr:"none", categoryeng:"none"};
 
 function updateGameSettings(){
-    const categoryCheckboxes = document.querySelectorAll(".category-checkbox");
-
-    categoryCheckboxes.forEach(function (currentElement){
-        const categoryName = currentElement.id.replace('category-', '');
-        gameSettings[categoryName] = currentElement.checked;
-        //alert(categoryName +" is set to " + gameSettings[categoryName])
+    const settingCheckboxes = document.querySelectorAll(".settings-checkbox");
+    
+    settingCheckboxes.forEach(function (currentElement){
+        if (currentElement.classList.contains("category-checkbox")){
+            const categoryName = currentElement.id.replace('category-', '');
+            gameSettings[categoryName] = currentElement.checked;
+        }
+        //daha modüler hale getir bu kısmı
+        if (currentElement.id === "checkbox-rotate-player-order"){
+            gameSettings.rotatePlayerOrder = currentElement.checked;
+        }
+        if (currentElement.id === "checkbox-imposter-clue"){
+            gameSettings.impostorClue = currentElement.checked;
+        }
+        if (currentElement.id === "checkbox-imposters-see-other-imposters"){
+            gameSettings.impostersSeeOtherImposters = currentElement.checked;
+        }
     });
     localStorage.setItem('userGameSettings', JSON.stringify(gameSettings));
     console.log("Oyun ayarları LocalStorage'a kaydedildi.");
@@ -104,6 +118,7 @@ function applyTheme(newTheme) {
 let categoryIndexMap = new Map(); // kategori isimlerini son eklenen kelimenin indexi ile eşleyecek
 function startGame(){
     const wordList = [];
+    categoryIndexMap.clear();
     for (const key in gameSettings){
         if (categories[key] && gameSettings[key] === true){ // eğer category varsa ve seçiliyse
             if(siteSettings.language === 'tr') {
@@ -123,12 +138,12 @@ function startGame(){
     const randint = Math.floor(Math.random() * wordList.length);
     let wordCategory = "none";
     for (let [category, index] of categoryIndexMap) {
-        if (randint < index){
+        if (randint <= index){
             wordCategory = category;
             break;
         }
     }
-    console.log("randint : "+ randint + " word is " + wordList[randint] + " word's category is " + wordCategory);
+    //console.log("randint : "+ randint + " word is " + wordList[randint] + " word's category is " + wordCategory);
     theWord.word = wordList[randint];
     if (siteSettings.language === "tr"){
         wordCategory = categories[wordCategory].tr_description;
@@ -172,13 +187,55 @@ document.addEventListener('DOMContentLoaded', function() {
     //Load localstorage
     const savedGameSettings = localStorage.getItem('userGameSettings');
     if (savedGameSettings){
-        gameSettings= JSON.parse(savedGameSettings);
+        gameSettings = JSON.parse(savedGameSettings);
+
+        // Format: 'HTML_ID': 'SETTINGS_KEY'
+        const settings = {
+            'checkbox-rotate-player-order': { 
+                jsName: 'rotatePlayerOrder', 
+                defaultValue: true 
+            },
+            'checkbox-imposter-clue': { 
+                jsName: 'impostorClue', 
+                defaultValue: true 
+            },
+            'checkbox-imposters-see-other-imposters': { 
+                jsName: 'impostersSeeOtherImposters', 
+                defaultValue: false 
+            }
+        };
+
+        const settingCheckboxes = document.querySelectorAll('.settings-checkbox');
+        settingCheckboxes.forEach(function (currentElement){
+            const setting = settings[currentElement.id]
+
+            if (setting) { //SettingsMap'te tanımlıysa
+                if (gameSettings.hasOwnProperty(setting.jsName)) { // gameSettings'te ayar varsa
+                    currentElement.checked = gameSettings[setting.jsName];
+                } else { // Ayar gameSettings'te yoksa eski save veya bozuk save demektir
+                    currentElement.checked = setting.defaultValue; // varsayılan değeri ata
+                    gameSettings[setting.jsName] = setting.defaultValue;
+                    console.log(`Eski save veya eksik ayar tespit edildi. ${setting.jsName} varsayılan (${setting.defaultValue}) yapıldı.`);
+                }
+                
+                currentElement.addEventListener('change', (event) => {
+                    gameSettings[setting.jsName] = event.target.checked;
+                });
+            }
+
+        });
 
         for (const key in gameSettings) {
             if (document.getElementById('category-' + key)) {
                 const checkbox = document.getElementById('category-' + key);
                 checkbox.checked = gameSettings[key];
             }
+        }
+
+        if (!gameSettings.version || gameSettings.version !== "v1.0.0-beta2"){
+            console.log("Eski versiyon save tespit edildi. Ayarlar güncellendi.");
+            gameSettings.version = "1.0.0-beta2";
+            localStorage.setItem('userGameSettings', JSON.stringify(gameSettings));
         }
     }
     //Load language 
@@ -206,10 +263,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     btnDecrease.forEach(function (currentElement){
         currentElement.addEventListener('click', () => {
-            let currentValue = parseInt(currentElement.previousElementSibling.textContent);
+            let currentValue = parseInt(currentElement.nextElementSibling.textContent);
             if ((currentValue > 1 && currentElement.dataset.target === "imposters") || (currentValue > 3 && currentElement.dataset.target === "players")) {
                 currentValue -= 1;
-                currentElement.previousElementSibling.textContent = currentValue;
+                currentElement.nextElementSibling.textContent = currentValue;
                 if (currentElement.dataset.target === "players"){
                     deletePlayerNameInput();
                 } 
@@ -218,11 +275,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     btnIncrease.forEach(function (currentElement){
         currentElement.addEventListener('click', () => {
-            let currentValue = parseInt(currentElement.nextElementSibling.textContent);
-            //console.log(currentValue);
+            let currentValue = parseInt(currentElement.previousElementSibling.textContent);
             if (currentValue < 10 && (currentElement.dataset.target === "players" || currentValue < getCounterValue("counter-value-players") - 1)) {
                 currentValue += 1;
-                currentElement.nextElementSibling.textContent = currentValue;
+                currentElement.previousElementSibling.textContent = currentValue;
                 if (currentElement.dataset.target === "players"){
                     createPlayerNameInput(currentValue);
                 }            
@@ -285,10 +341,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let gameButtonStateCount = 0;
     gameButton.addEventListener('click', ()=> {
-        console.log(players);
         gameButtonStateCount++;
         const currentPlayer = Math.floor(gameButtonStateCount / 2);
-        console.log("gameButtonStateCount : "+ gameButtonStateCount);
+        //console.log("gameButtonStateCount : "+ gameButtonStateCount);
         if (gameButtonStateCount % 2 === 1 && gameButtonStateCount < (getCounterValue("counter-value-players") * 2)){
             turnText.dataset.tr = `Sıradaki Oyuncu : ${players[currentPlayer].name}`;
             turnText.dataset.eng = `${players[currentPlayer].name}'s turn`;
@@ -303,12 +358,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 hint.dataset.eng = `Category : ${theWord.categoryeng}`;
                 hint.hidden = false;
             } else {
-                wordInfo.dataset.tr = `Sen bir yalancısın! Gizli kalmaya çalış.`;
-                wordInfo.dataset.eng = `You are a liar! Try to stay hidden.`;
+                wordInfo.dataset.tr = `Sen bir yalancısın! Gizli kalmaya çalış.<br>`;
+                wordInfo.dataset.eng = `You are a liar! Try to stay hidden.<br>`;
                 if (gameSettings.impostorClue === true){
                     hint.dataset.tr = `Kategori İpucusu: ${theWord.categorytr}.`;
                     hint.dataset.eng = `Category Hint : ${theWord.categoryeng}`;
                     hint.hidden = false;
+                }
+                if (gameSettings.impostersSeeOtherImposters){
+                    const otherLiars = getImposters().filter(p => (p.name !== players[currentPlayer].name)).map(p => p.name).join(", ");
+                    if (otherLiars !== ""){
+                        wordInfo.dataset.tr += `Diğer yalancılar : ${otherLiars}`;
+                        wordInfo.dataset.eng += `Other liars : ${otherLiars}`;
+                    }
                 }
             }
             wordInfo.hidden = false;
@@ -325,10 +387,12 @@ document.addEventListener('DOMContentLoaded', function() {
         else if (gameButtonStateCount === (getCounterValue("counter-value-players") * 2)){
             gameButton.dataset.tr = "Yalancıyı Göster";
             gameButton.dataset.eng = "Reveal the Liar";
-            turnText.dataset.tr = "Tüm oyuncular kelimelerini gördü. Oyun başladı.";
+            turnText.dataset.tr = "Tüm masumlar kelimelerini gördü.<br> Oyun başladı.";
+            turnText.dataset.eng = "All players have seen their words. The game has started.";
+            turnText.hidden = false;
             wordInfo.hidden = true;
             hint.hidden = true;
-            updateLanguage(gameButton);
+            updateLanguage(turnText, gameButton);
         }
         else if (gameButtonStateCount === (getCounterValue("counter-value-players") * 2) + 1){
             gameButton.dataset.tr = "Oyunu Bitir";

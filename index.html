@@ -105,23 +105,27 @@
                 <ul class="settings-list">
                     <li class="counter-wrapper">
                         <span data-tr="Oyuncu sayısı :" data-eng="Player count :">Oyuncu sayısı :</span> 
-                        <button class="counter-btn counter-increase-btn" data-target="players">+</button>
-                        <span class="counter-value" id="counter-value-players" data-target="players">4</span>
                         <button class="counter-btn counter-decrease-btn" data-target="players">-</button> 
+                        <span class="counter-value" id="counter-value-players" data-target="players">4</span>
+                        <button class="counter-btn counter-increase-btn" data-target="players">+</button>
                     </li>
                     <li class="counter-wrapper" id="liar-counter">
                         <span data-tr="Yalancı sayısı :" data-eng="Imposter count :">Yalancı sayısı :</span> 
-                        <button class="counter-btn counter-increase-btn" data-target="imposters">+</button>
-                        <span class="counter-value" id="counter-value-imposters" data-target="imposters">1</span>
                         <button class="counter-btn counter-decrease-btn" data-target="imposters">-</button> 
+                        <span class="counter-value" id="counter-value-imposters" data-target="imposters">1</span>
+                        <button class="counter-btn counter-increase-btn" data-target="imposters">+</button>
                     </li>
                     <li>
-                        <input type="checkbox" id="checkbox-rotate-starting-player" class="settings-checkbox" checked> 
-                        <label for="checkbox-rotate-starting-player" data-tr="Her turda başlangıç oyuncusunu değiştir" data-eng="Rotate starting player every round">Her turda başlangıç oyuncusunu değiştir</label>
+                        <input type="checkbox" id="checkbox-rotate-player-order" class="settings-checkbox" checked> 
+                        <label for="checkbox-rotate-player-order" data-tr="Her turda başlangıç oyuncusunu değiştir" data-eng="Rotate starting player every round">Her turda başlangıç oyuncusunu değiştir</label>
                     </li>
                     <li>
                         <input type="checkbox" id="checkbox-imposter-clue" class="settings-checkbox" checked> 
                         <label for="checkbox-imposter-clue" data-tr="Yalancı'ya ipucu ver" data-eng="Give hint to Imposter">Yalancı'ya ipucu ver</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="checkbox-imposters-see-other-imposters" class="settings-checkbox"> 
+                        <label for="checkbox-imposters-see-other-imposters" data-tr="Yalancılar diğer yalancıları görebilir" data-eng="Imposters can see other imposters">Yalancılar diğer yalancıları görebilir</label>
                     </li>
                 </ul>
                 <h3 data-tr="Kategori Seçimi" data-eng="Select Category">Kategori Seçimi</h3>
@@ -137,27 +141,46 @@
                     <li><input type="checkbox" id="category-turkey_cities" class="category-checkbox settings-checkbox"> <label for="category-turkey_cities" data-tr="Türkiye Şehirleri" data-eng="Cities of Turkey">Türkiye Şehirleri</label></li>
                     <li><input type="checkbox" id="category-university_departments" class="category-checkbox settings-checkbox"> <label for="category-university_departments" data-tr="Üniversite Bölümleri" data-eng="University Departments">Üniversite Bölümleri</label></li>
                     <li><input type="checkbox" id="category-clash_royale_cards" class="category-checkbox settings-checkbox"> <label for="category-clash_royale_cards" data-tr="Clash Royale Kartları" data-eng="Clash Royale Cards">Clash Royale Kartları</label></li>
+                    <li><input type="checkbox" id="category-historical_figures" class="category-checkbox settings-checkbox"> <label for="category-historical_figures" data-tr="Tarihi Figürler" data-eng="Historical Figures">Tarihi Figürler</label></li>
                 </ul>
                 <button class="closemodal-btn" data-target="modal-settings" data-tr="Kapat" data-eng="Close">Kapat</button>
             </div>
         </dialog>
-    <button id="version-text" class="tiklanabilir trigger-modal" data-target="modal-changelog" data-tr="V1.0.0 - Daha fazla bilgi için tıkla " data-eng="V1.0.0 - Click to see more information">
-        V1.0.0 
+    <button id="version-text" class="tiklanabilir trigger-modal" data-target="modal-changelog" data-tr="v1.0.0-beta2" data-eng="v1.0.0-beta2">
+        V1.0.0-beta2
     </button>
     <div id="changelog-container">
         <dialog class="modal" id="modal-changelog">
                 <h1 data-tr="Değişiklik Günlüğü" data-eng="Changelog">Değişiklik Günlüğü</h1>
                 <div style="max-height: 400px; text-align: left; padding-bottom:0px;" class="changelog-entry">
-                    <h2>v1.0.0</h2>
-                    <h3 data-tr="İlk sürüm yayınlandı. Oyunun önemli özellikleri aşağıda :" data-eng="Initial release">İlk sürüm yayınlandı</h3>
-                    <ul>
-                        <li data-tr="Temel 'Yalancıyı Bul' oyun mekanikleri eklendi" data-eng="Core 'Find the Imposter' game mechanics implemented">Yalancıyı bulma kelime oyunu mekanikleri</li>
-                        <li data-tr="Türkçe ve İngilizce dil desteği sağlandı" data-eng="Added support for Turkish and English languages">Türkçe ve İngilizce dil desteği eklendi</li>
-                        <li data-tr="3 ila 10 oyuncu ile birlikte oynama desteği" data-eng="Support for playing with 3 to 10 players">3'ten 10'a kadar kişiyle oynama desteği</li>
-                        <li data-tr="Ayarlanabilir yalancı sayısı" data-eng="Adjustable number of imposters">Değiştirilebilir yalancı sayısı</li>
-                        <li data-tr="Özelleştirilebilir oyun ayarları (kategoriler ve kurallar)" data-eng="Customizable game settings (categories and rules)">Özelleştirilebilir Oyun ayarları</li>
-                        <li data-tr="Karanlık mod desteği" data-eng="Dark mode support">Karanlık mod desteği</li>
-                    </ul>
+                <h2>v1.0.0-beta2</h2>
+                <div class="changelog-content">
+                <h3 data-tr="İkinci beta sürümü yayınlandı. Oyunun önemli değişiklikleri aşağıda:" 
+                    data-eng="Second beta version released. Major changes are listed below:">
+                    İkinci beta sürümü yayınlandı. Oyunun önemli değişiklikleri aşağıda:
+                </h3>
+                <ul>
+                    <li data-tr="Yalancıyı göster aşamasındaki tur yazısı düzeltildi." 
+                        data-eng="Fixed the round text display in the 'Reveal Liar' phase.">
+                        Yalancıyı göster aşamasındaki tur yazısı düzeltildi.
+                    </li>
+                    <li data-tr="Tarihi figürler kategorisi eklendi." 
+                        data-eng="Added 'Historical Figures' category.">
+                        Tarihi figürler kategorisi eklendi.
+                    </li>
+                    <li data-tr="Oyun ayarlarının cihaza kaydedilmeme sorunu düzeltildi (localStorage)." 
+                        data-eng="Fixed issue where game settings were not saved to the device (localStorage).">
+                        Oyun ayarlarının cihaza kaydedilmeme sorunu düzeltildi (localStorage).
+                    </li>
+                    <li data-tr="Oyuncu ve yalancıların sayaç butonlarının yerleri düzeltildi." 
+                        data-eng="Corrected the positions of player and liar counter buttons.">
+                        Oyuncu ve yalancıların sayaç butonlarının yerleri düzeltildi.
+                    </li>
+                    <li data-tr="Yalancıların birbirini görebilme ayarı eklendi. (Varsayılan olarak kapalı)" 
+                        data-eng="Added setting for liars to see each other. (Disabled by default)">
+                        Yalancıların birbirini görebilme ayarı eklendi. (Varsayılan olarak kapalı)
+                    </li>
+                </ul>
                 </div>
                 <button id="version-closemodal" class="closemodal-btn" style="text-align:center;"data-target="modal-changelog" data-tr="Kapat" data-eng="Close">Kapat</button>
         </dialog>

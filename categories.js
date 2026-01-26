@@ -248,5 +248,29 @@ export const categories = {
       "İskelet Ordusu", "İskeletler", "Tomruk", "İksir Golemi", "Elektro Dev", 
       "Kraliyet Devi", "Balon"
     ]
+  },
+  historical_figures: {
+    en_description: "Historical Figures",
+    tr_description: "Tarihi Figürler",
+    en_words: [
+      "Mustafa Kemal Ataturk", "Mehmed the Conqueror", "Suleyman the Magnificent", "Genghis Khan", "Alexander the Great", 
+      "Julius Caesar", "Napoleon Bonaparte", "Saladin", "Attila the Hun", "Cleopatra", 
+      "Albert Einstein", "Isaac Newton", "Nikola Tesla", "Thomas Edison", "Alexander Graham Bell", 
+      "Charles Darwin", "Marie Curie", "Galileo Galilei", "Leonardo da Vinci", "Michelangelo", 
+      "Vincent van Gogh", "Pablo Picasso", "Wolfgang Amadeus Mozart", "William Shakespeare", 
+      "Socrates", "Plato", "Aristotle", "Rumi", "Avicenna", 
+      "Mimar Sinan", "Piri Reis", "Christopher Columbus", "Selim the Grim", "Neil Armstrong", 
+      "Abraham Lincoln", "Winston Churchill", "Mahatma Gandhi", "Abdul Hamid II", "Queen Victoria"
+    ],
+    tr_words: [
+      "Mustafa Kemal Atatürk", "Fatih Sultan Mehmet", "Kanuni Sultan Süleyman", "Cengiz Han", "Büyük İskender", 
+      "Jül Sezar", "Napolyon Bonapart", "Selahaddin Eyyubi", "Atilla", "Kleopatra", 
+      "Albert Einstein", "Isaac Newton", "Nikola Tesla", "Thomas Edison", "Alexander Graham Bell", 
+      "Charles Darwin", "Marie Curie", "Galileo Galilei", "Leonardo da Vinci", "Michelangelo", 
+      "Vincent van Gogh", "Pablo Picasso", "Wolfgang Amadeus Mozart", "William Shakespeare", 
+      "Sokrates", "Platon", "Aristoteles", "Mevlana", "İbn-i Sina", 
+      "Mimar Sinan", "Piri Reis", "Kristof Kolomb", "Yavuz Sultan Selim", "Neil Armstrong", 
+      "Abraham Lincoln", "Winston Churchill", "Mahatma Gandi", "2. Abdülhamid", "Kraliçe Victoria"
+    ]
   }
 };
