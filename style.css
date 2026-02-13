@@ -173,7 +173,11 @@ dialog.modal {
 .counter-btn:active {
 	transform: scale(0.95);     /* Tıklama hissi için ufak küçülme */
 }
-
+#special-text {
+	font-size: 10px;
+	font-style: italic;
+	color: var(--text-color);
+}
 .player-name-container {
 	display: flex;
 	flex-direction: row;

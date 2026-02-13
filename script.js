@@ -31,6 +31,7 @@ function getCounterValue(counterId) {
 }
 
 let players = [];
+let jokeRound = 0;
 
 function initializePlayers(count, playerNames) {
     players = [];
@@ -136,6 +137,8 @@ function startGame(){
     }
     if (wordList.length === 0) {
         console.warn("No categories selected or no words available");
+        alert("Lütfen en az bir kategori seçin");
+        return false;
     }
 
     //randomly select a word from wordList
@@ -258,33 +261,61 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const btnDecrease = document.querySelectorAll('.counter-decrease-btn');
     const btnIncrease = document.querySelectorAll('.counter-increase-btn');
+    const specialText = document.getElementById("special-text")
     //const counterDisplay = document.querySelectorAll('.counter-value');
 
     btnDecrease.forEach(function (currentElement){
         currentElement.addEventListener('click', () => {
             let currentValue = parseInt(currentElement.nextElementSibling.textContent);
-            if ((currentValue > 1 && currentElement.dataset.target === "imposters") || (currentValue > 3 && currentElement.dataset.target === "players")) {
+            if ((currentValue > 0 && currentElement.dataset.target === "imposters") || (currentValue > 3 && currentElement.dataset.target === "players")) {
                 currentValue -= 1;
+                jokeRound = 0;
+                document.getElementById("special-text").hidden = true;
                 currentElement.nextElementSibling.textContent = currentValue;
                 if (currentElement.dataset.target === "players"){
                     deletePlayerNameInput();
+                    if (currentValue < getCounterValue("counter-value-imposters")){
+                        document.getElementById("counter-value-imposters").textContent = currentValue;
+                        console.log("Joke round.");
+                        jokeRound = 1;
+                        specialText.hidden = false;
+                        specialText.dataset.tr = "Şaka turu aktif. Herkes sadece kendini yalancı olarak görecek.";
+                        specialText.dataset.eng = "Joke round active. Everyone sees themselves as the only imposter.";
+                        updateLanguage(specialText);
+                    }
                 } 
-            }   
+            }
+            if(getCounterValue("counter-value-imposters") === 0){
+                console.log("Joke round.");
+                jokeRound = 2;
+                specialText.hidden = false;
+                specialText.dataset.tr = "Şaka turu aktif. Herkes kendini masum olarak görecek.";
+                specialText.dataset.eng = "Joke round active. Everyone sees themselves as innocent.";
+                updateLanguage(specialText);
+            }
         });
+
     });
     btnIncrease.forEach(function (currentElement){
         currentElement.addEventListener('click', () => {
             let currentValue = parseInt(currentElement.previousElementSibling.textContent);
-            if (currentValue < 10 && (currentElement.dataset.target === "players" || currentValue < getCounterValue("counter-value-players") - 1)) {
+            if (currentValue < 10 && (currentElement.dataset.target === "players" || currentValue < getCounterValue("counter-value-players"))) {
                 currentValue += 1;
+                jokeRound = 0;
+                document.getElementById("special-text").hidden = true;
                 currentElement.previousElementSibling.textContent = currentValue;
                 if (currentElement.dataset.target === "players"){
                     createPlayerNameInput(currentValue);
                 }            
             }
-            //if(getCounterValue("counter-value-imposters") === getCounterValue("counter-value-players")){
-            //    console.log("Joke run.");
-            //}
+            if(getCounterValue("counter-value-imposters") === getCounterValue("counter-value-players")){
+                console.log("Joke round.");
+                jokeRound = 1;
+                specialText.hidden = false;
+                specialText.dataset.tr = "Şaka turu aktif. Herkes sadece kendini yalancı olarak görecek.";
+                specialText.dataset.eng = "Joke round active. Everyone sees themselves as the only imposter.";
+                updateLanguage(specialText);
+            }
         });
     });
 
@@ -365,7 +396,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     hint.dataset.eng = `Category Hint : ${theWord.categoryeng}`;
                     hint.hidden = false;
                 }
-                if (gameSettings.impostersSeeOtherImposters){
+                if (gameSettings.impostersSeeOtherImposters && jokeRound === 0){
                     const otherLiars = getImposters().filter(p => (p.name !== players[currentPlayer].name)).map(p => p.name).join(", ");
                     if (otherLiars !== ""){
                         wordInfo.dataset.tr += `Diğer yalancılar : ${otherLiars}`;
@@ -401,7 +432,13 @@ document.addEventListener('DOMContentLoaded', function() {
             if (imposters.length === 1){
                 wordInfo.dataset.tr = `Yalancı : ${imposters.map(imp => imp.name).join(", ")}`;
                 wordInfo.dataset.eng = `Liar : ${imposters.map(imp => imp.name).join(", ")}`;
-            } else {
+            } else if (jokeRound === 1){
+                wordInfo.dataset.tr = `Herkes yalancı! Hiç masum yoktu.<br> Bu bir şaka turuydu.`;
+                wordInfo.dataset.eng = `Everyone is a liar! There were no innocents. This was a joke round.`;
+            } else if (jokeRound === 2){
+                wordInfo.dataset.tr = `Herkes masum! Hiç yalancı yoktu.<br> Bu bir şaka turuydu.`;
+                wordInfo.dataset.eng = `Everyone is innocent! There were no liars. This was a joke round.`;
+            } else{
                 wordInfo.dataset.tr = `Yalancılar : ${imposters.map(imp => imp.name).join(", ")}`;
                 wordInfo.dataset.eng = `Liars : ${imposters.map(imp => imp.name).join(", ")}`;
             }
