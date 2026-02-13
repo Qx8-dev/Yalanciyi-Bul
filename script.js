@@ -6,7 +6,7 @@ const siteSettings = {
 };
 
 let gameSettings = {
-    version: "v1.0.0-beta2",
+    version: "v1.0.0-beta3",
     sfxVolume: 80,
     rotatePlayerOrder: true,
     impostorClue: true,
@@ -36,7 +36,6 @@ function initializePlayers(count, playerNames) {
     players = [];
     for (let i = 0; i < count; i++) {
         players.push({
-            //name: `Player ${i + 1}`,
             name: `${playerNames[i]}`,
             status: "innocent"
         });
@@ -50,15 +49,20 @@ function assignImposters() {
     players.forEach(player => {
         player.status = "innocent";
     });
-    const imposterCount = getCounterValue("counter-value-imposters");
-    for (let i = 0; i < imposterCount; i++)
-    {
-        let impostorIndex = Math.floor(Math.random() * players.length);
-        while (players[impostorIndex].status === "imposter"){
-            impostorIndex = Math.floor(Math.random() * players.length);
-        }
-        players[impostorIndex].status = "imposter";
+    const imposterCount = Math.min(getCounterValue("counter-value-imposters"),
+                                    players.length);
+    // Select unique random indices for imposters
+    const selectedIndices = new Set();
+    while (selectedIndices.size < imposterCount) {
+        selectedIndices.add(Math.floor(Math.random() * players.length));
     }
+
+    // Assign imposter status to the selected players
+    selectedIndices.forEach(index => {
+        players[index].status = "imposter";
+        //console.log(`Player ${players[index].name} is an imposter.`);
+    });
+
 }
 
 function getImposters() {
@@ -145,13 +149,8 @@ function startGame(){
     }
     //console.log("randint : "+ randint + " word is " + wordList[randint] + " word's category is " + wordCategory);
     theWord.word = wordList[randint];
-    if (siteSettings.language === "tr"){
-        wordCategory = categories[wordCategory].tr_description;
-        theWord.categorytr = wordCategory;
-    }   else {
-        wordCategory = categories[wordCategory].en_description;
-        theWord.categoryeng = wordCategory;
-    }
+    theWord.categorytr = categories[wordCategory].tr_description;
+    theWord.categoryeng = categories[wordCategory].en_description;
 }
 function createPlayerNameInput(firstPlayerNumber, times=1) {
     let currentValue = firstPlayerNumber;
@@ -232,9 +231,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        if (!gameSettings.version || gameSettings.version !== "v1.0.0-beta2"){
+        if (!gameSettings.version || gameSettings.version !== "v1.0.0-beta3"){
             console.log("Eski versiyon save tespit edildi. Ayarlar güncellendi.");
-            gameSettings.version = "1.0.0-beta2";
+            gameSettings.version = "1.0.0-beta3";
             localStorage.setItem('userGameSettings', JSON.stringify(gameSettings));
         }
     }
@@ -313,7 +312,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 turnText.dataset.eng = `${players[0].name}'s turn`;
                 updateLanguage(turnText);
             }
-            document.getElementById(currentElement.dataset.target).showModal();
+            document.getElementById(currentElement.dataset.target).show();
+            //showModal()
         });
     });
     closeModal.forEach(function (currentElement){

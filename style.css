@@ -3,6 +3,7 @@
   --modal-background: white; /* Çok açık gri */
   --text-color: black; /* Koyu gri */
   --button-color: #007bff; /* Mavi */
+  --border-color: #dddddd;
 }
 
 [data-theme="dark"] {
@@ -10,6 +11,7 @@
   --modal-background: #1e1e1e; /* Koyu gri */
   --text-color: #e0e0e0; /* Kırık beyaz */
   --button-color: #37a1ff; /* Mavinin daha açık tonu */
+  --border-color: #333333;
 }
 
 body {
@@ -21,6 +23,7 @@ body {
 	align-items: center;
 	height: 100vh;
 	margin: 0;
+  	transition: background-color 0.3s, color 0.3s; /* tema değişimi için */
 }
 
 .box {
@@ -30,18 +33,37 @@ body {
 	border-radius: 10px;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	text-align: center;
+  	transition: background-color 0.3s, color 0.3s; /* tema değişimi için */
 }
 
-.modal {
-    color: var(--text-color);
-	background-color: var(--modal-background);     /* Arka plan rengi */
-	border: 1px solid #ddd;
-	border-radius: 8px;     /* Köşeleri yuvarlatma */
-	padding: 20px;
-	max-width: 600px;     /* Maksimum genişlik */
-	font-family: sans-serif;
-	line-height: 1.6;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);     /* Hafif gölge */
+dialog.modal {
+  /* --- 1. KONUMLANDIRMA (Sabit ve Ortada) --- */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  z-index: 1000;
+
+  /* --- 2. GÖRÜNÜM VE BOYUT --- */
+  width: 90%;
+  max-width: 600px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: sans-serif;
+  line-height: 1.6;
+  max-height: 90vh;
+  overflow-y: auto; /* İçerik taşarsa kaydırma çubuğu ekler */
+
+  /* --- 3. RENKLER VE TEMA (Değişkenler) --- */
+  background-color: var(--modal-background);
+  color: var(--text-color);
+  border: 1px solid var(--border-color); /* Artık temaya göre değişecek */
+
+  /* --- 4. GEÇİŞ ANİMASYONU --- */
+  /* Border rengi değişimi de animasyona dahil edildi */
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
 .site-settings {
@@ -54,9 +76,8 @@ body {
 	align-items: start;
 	flex-direction: column;
 	gap: 5px;     /* Yazı ile kutu arasındaki boşluk */
-
-	/* Görünüm ayarları (isteğe bağlı) */
-	z-index: 3737;     /* Diğer öğelerin üstünde kalmasını sağlar */
+	/*z-index: 3737;     /* Diğer öğelerin üstünde kalmasını sağlar */
+  	transition: background-color 0.3s, color 0.3s; /* tema değişimi için */
 }
 
 #language-container {
@@ -142,7 +163,7 @@ body {
 	display: flex;
 	justify-content: center;     /* + ve - işaretini butonun ortasına alır */
 	align-items: center;
-	transition: background 0.2s;
+	transition: background-color 0.3s, color 0.3s; /* tema değişimi için */
 }
 
 .counter-btn:hover {
@@ -175,6 +196,7 @@ button {
 	cursor: pointer;
 	font-size: 16px;
 	margin-top: 0px;
+  	transition: background-color 0.3s, color 0.3s; /* tema değişimi için */
 }
 
 button:hover {
@@ -182,9 +204,16 @@ button:hover {
 }
 
 #start-btn {
-	padding: 12.5px 20px 12.5px 20px;
+	padding: 10px 20px 10px 20px;
 	text-align: center;
 	flex: 1;
+}
+
+#settings-btn {
+    /* İçindeki ikonu tam merkeze koy */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .tiklanabilir {
@@ -198,6 +227,7 @@ button:hover {
 	text-decoration: underline;     /* Altı çizili olsun (link gibi gözüksün) */
 	background-color: transparent !important; /* Arka plan rengini kaldırır */
 	/*font-weight: bold;  */
+  	transition: background-color 0.3s, color 0.3s; /* tema değişimi için */
 }
 
 [data-theme="dark"] .tiklanabilir {
@@ -222,19 +252,21 @@ button:hover {
 	margin-top: 20px;
 }
 #changelog-container {
+	box-sizing: border-box;
 	display:flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	
 }
 .button-container {
 	display: flex;     /* İçindekileri yan yana dizer */
 	justify-content: center;     /* Yatayda ortalar */
-	align-items: center;     /* Dikey hizayı eşitler */
+	align-items: stretch;
 	gap: 10px;     /* İki buton arasına boşluk bırakır */
 	margin-top: 20px;     /* Üstteki yazıdan biraz uzaklaştırır */
+	
 }
+
 #modal-game {
 	box-sizing: border-box;
 	/*display: flex;

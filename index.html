@@ -83,7 +83,7 @@
 
         <div class="button-container">
             <button class="trigger-modal" id="start-btn" data-target="modal-game" data-tr="Başlat" data-eng="Start">Başlat</button>
-            <button class="trigger-modal" data-target="modal-settings">
+            <button id="settings-btn" class="trigger-modal" data-target="modal-settings">
                 <span class="material-symbols-outlined">settings</span>
             </button>
         </div>
@@ -146,39 +146,35 @@
                 <button class="closemodal-btn" data-target="modal-settings" data-tr="Kapat" data-eng="Close">Kapat</button>
             </div>
         </dialog>
-    <button id="version-text" class="tiklanabilir trigger-modal" data-target="modal-changelog" data-tr="v1.0.0-beta2" data-eng="v1.0.0-beta2">
-        V1.0.0-beta2
+    <button id="version-text" class="tiklanabilir trigger-modal" data-target="modal-changelog" data-tr="v1.0.0-beta3" data-eng="v1.0.0-beta3">
+        V1.0.0-beta3
     </button>
     <div id="changelog-container">
         <dialog class="modal" id="modal-changelog">
                 <h1 data-tr="Değişiklik Günlüğü" data-eng="Changelog">Değişiklik Günlüğü</h1>
                 <div style="max-height: 400px; text-align: left; padding-bottom:0px;" class="changelog-entry">
-                <h2>v1.0.0-beta2</h2>
+                <h2>v1.0.0-beta3</h2>
                 <div class="changelog-content">
-                <h3 data-tr="İkinci beta sürümü yayınlandı. Oyunun önemli değişiklikleri aşağıda:" 
-                    data-eng="Second beta version released. Major changes are listed below:">
-                    İkinci beta sürümü yayınlandı. Oyunun önemli değişiklikleri aşağıda:
+                <h3 data-tr="Üçüncü beta sürümü yayınlandı. Oyunun önemli değişiklikleri aşağıda:" 
+                    data-eng="Third beta version released. Major changes are listed below:">
+                    Üçüncü beta sürümü yayınlandı. Oyunun önemli değişiklikleri aşağıda:
                 </h3>
                 <ul>
-                    <li data-tr="Yalancıyı göster aşamasındaki tur yazısı düzeltildi." 
-                        data-eng="Fixed the round text display in the 'Reveal Liar' phase.">
-                        Yalancıyı göster aşamasındaki tur yazısı düzeltildi.
+                    <li data-tr="Yalancı seçme algoritması değiştirildi, daha optimize hale getirildi." 
+                        data-eng="The liar selection algorithm was changed and optimized.">
+                        Yalancı seçme algoritması değiştirildi, daha optimize hale getirildi.
                     </li>
-                    <li data-tr="Tarihi figürler kategorisi eklendi." 
-                        data-eng="Added 'Historical Figures' category.">
-                        Tarihi figürler kategorisi eklendi.
+                    <li data-tr="Sitenin tema geçişleri artık yumuşak geçişlerle sağlanıyor, ani renk değişimleri ortadan kaldırıldı." 
+                        data-eng="The site's theme transitions now use smooth transitions instead of abrupt color changes.">
+                        Sitenin tema geçişleri artık yumuşak geçişlerle sağlanıyor, ani renk değişimleri yerine.
                     </li>
-                    <li data-tr="Oyun ayarlarının cihaza kaydedilmeme sorunu düzeltildi (localStorage)." 
-                        data-eng="Fixed issue where game settings were not saved to the device (localStorage).">
-                        Oyun ayarlarının cihaza kaydedilmeme sorunu düzeltildi (localStorage).
+                    <li data-tr="Oyuna başlama ve oyun ayarları butonlarının uzunlukları eşitlendi, ayarlar ikonu ortalandı. Böylece daha simetrik ve düzenli bir görünüm sağlandı." 
+                        data-eng="Equalized the heights of the 'Start' and Game Settings buttons, and centered the settings icon. This provides a more symmetric and neat appearance.">
+                        Oyuna başlama ve oyun ayarları butonlarının uzunlukları eşitlendi, ayarlar ikonu ortalandı. Böylece daha simetrik ve düzenli bir görünüm sağlandı.
                     </li>
-                    <li data-tr="Oyuncu ve yalancıların sayaç butonlarının yerleri düzeltildi." 
-                        data-eng="Corrected the positions of player and liar counter buttons.">
-                        Oyuncu ve yalancıların sayaç butonlarının yerleri düzeltildi.
-                    </li>
-                    <li data-tr="Yalancıların birbirini görebilme ayarı eklendi. (Varsayılan olarak kapalı)" 
-                        data-eng="Added setting for liars to see each other. (Disabled by default)">
-                        Yalancıların birbirini görebilme ayarı eklendi. (Varsayılan olarak kapalı)
+                    <li data-tr="Sitenin dili ve teması artık her zaman değiştirilebilir hale geldi. (Görünür olduklarında)" 
+                        data-eng="The site's language and theme can now be changed at any time (when visible).">
+                        Artık sitenin dili ve teması her zaman değiştirilebilir hale geldi. (Görünür olduklarında)
                     </li>
                 </ul>
                 </div>
