@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!gameSettings.version || gameSettings.version !== "v1.0.0-beta3"){
             console.log("Eski versiyon save tespit edildi. Ayarlar güncellendi.");
-            gameSettings.version = "1.0.0-beta3";
+            gameSettings.version = "v1.0.0-beta3";
             localStorage.setItem('userGameSettings', JSON.stringify(gameSettings));
         }
     }
@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (currentValue < 10 && (currentElement.dataset.target === "players" || currentValue < getCounterValue("counter-value-players"))) {
                 currentValue += 1;
                 jokeRound = 0;
-                document.getElementById("special-text").hidden = true;
+                specialText.hidden = true;
                 currentElement.previousElementSibling.textContent = currentValue;
                 if (currentElement.dataset.target === "players"){
                     createPlayerNameInput(currentValue);
