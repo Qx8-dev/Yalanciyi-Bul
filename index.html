@@ -92,9 +92,9 @@
             <div id="game-container">
                 <!--<h2 data-tr="Yalancıyı Bul" data-eng="Find the Liar" style="text-align: left; margin:0px;">Yalancıyı Bul</h2>-->
                 <h2 hidden id="turn-info" data-tr="Defaultuser'ın sırası" data-eng="Defaultuser's turn" style="text-align: center;">turntext</h2>
-                <span class="italic-text" hidden id="word-info" data-tr="Kelimen: " data-eng="Your word: "style="text-align: center;"></span>
+                <span hidden id="word-info" data-tr="Kelimen: " data-eng="Your word: "style="text-align: center; font-weight: bold;"></span>
                 <span class="italic-text" hidden id="hint-info" data-tr="İpucu: " data-eng="Your hint: "style="text-align: center;"></span>
-                <span hidden id="length-info" data-tr="Kelimenin uzunluğu: " data-eng="Word length: "style="text-align: center;"></span>
+                <span hidden id="length-info" data-tr="" data-eng=""style="text-align: center;"></span>
                 <button id="game-btn" data-state="showWord" data-tr="Kelimeni göster" data-eng="Show the word"style="text-align: center;"></button>
             </div>
         </dialog>
@@ -152,35 +152,39 @@
                 <button class="closemodal-btn" data-target="modal-settings" data-tr="Kapat" data-eng="Close">Kapat</button>
             </div>
         </dialog>
-    <button id="version-text" class="tiklanabilir trigger-modal" data-target="modal-changelog" data-tr="v1.0.0-beta3dev" data-eng="v1.0.0-beta3dev">
-        V1.0.0-beta3dev
+    <button id="version-text" class="tiklanabilir trigger-modal" data-target="modal-changelog" data-tr="v1.0.0-beta4" data-eng="v1.0.0-beta4">
+        V1.0.0-beta4
     </button>
     <div id="changelog-container">
         <dialog class="modal" id="modal-changelog">
                 <h1 data-tr="Değişiklik Günlüğü" data-eng="Changelog">Değişiklik Günlüğü</h1>
                 <div style="max-height: 400px; text-align: left; padding-bottom:0px;" class="changelog-entry">
-                <h2>v1.0.0-beta3</h2>
+                <h2>v1.0.0-beta4</h2>
                 <div class="changelog-content">
-                <h3 data-tr="Üçüncü beta sürümü yayınlandı. Oyunun önemli değişiklikleri aşağıda:" 
-                    data-eng="Third beta version released. Major changes are listed below:">
-                    Üçüncü beta sürümü yayınlandı. Oyunun önemli değişiklikleri aşağıda:
+                <h3 data-tr="Dördüncü beta sürümü yayınlandı. Oyunun önemli değişiklikleri aşağıda:" 
+                    data-eng="Fourth beta version released. Major changes are listed below:">
+                    Dördüncü beta sürümü yayınlandı. Oyunun önemli değişiklikleri aşağıda:
                 </h3>
                 <ul>
-                    <li data-tr="Yalancı seçme algoritması değiştirildi, daha optimize hale getirildi." 
-                        data-eng="The liar selection algorithm was changed and optimized.">
-                        Yalancı seçme algoritması değiştirildi, daha optimize hale getirildi.
+                    <li data-tr="Şaka modu eklendi. Denemek için yalancı sayısını oyuncu sayısına eşitleyebilir veya sıfır yapabilirsiniz." 
+                        data-eng="Joke mode added. You can set the number of liars equal to the number of players or to zero to try it out.">
+                        Şaka modu eklendi. Denemek için yalancı sayısını oyuncu sayısına eşitleyebilir veya sıfır yapabilirsiniz.
                     </li>
-                    <li data-tr="Sitenin tema geçişleri artık yumuşak geçişlerle sağlanıyor, ani renk değişimleri ortadan kaldırıldı." 
-                        data-eng="The site's theme transitions now use smooth transitions instead of abrupt color changes.">
-                        Sitenin tema geçişleri artık yumuşak geçişlerle sağlanıyor, ani renk değişimleri yerine.
+                    <li data-tr="Yalancılar artık kelimenin uzunluğunu görebilecek. (Oyun ayarlarından kapatılabilir.). (Oyun ayarlarından kapatılabilir.)" 
+                        data-eng="Liars can now see the word length. (Can be disabled in game settings.)">
+                       Yalancılar artık kelimenin uzunluğunu görebilecek. (Oyun ayarlarından kapatılabilir.). (Oyun ayarlarından kapatılabilir.)
                     </li>
-                    <li data-tr="Oyuna başlama ve oyun ayarları butonlarının uzunlukları eşitlendi, ayarlar ikonu ortalandı. Böylece daha simetrik ve düzenli bir görünüm sağlandı." 
-                        data-eng="Equalized the heights of the 'Start' and Game Settings buttons, and centered the settings icon. This provides a more symmetric and neat appearance.">
-                        Oyuna başlama ve oyun ayarları butonlarının uzunlukları eşitlendi, ayarlar ikonu ortalandı. Böylece daha simetrik ve düzenli bir görünüm sağlandı.
+                    <li data-tr="Açılır pencereler artık pencere dışına tıklanarak kapatılabilecek." 
+                        data-eng="Dialogs can now be closed by clicking outside of them.">
+                        Açılır pencereler artık pencere dışına tıklanarak kapatılabilecek.
                     </li>
-                    <li data-tr="Sitenin dili ve teması artık her zaman değiştirilebilir hale geldi. (Görünür olduklarında)" 
-                        data-eng="The site's language and theme can now be changed at any time (when visible).">
-                        Artık sitenin dili ve teması her zaman değiştirilebilir hale geldi. (Görünür olduklarında)
+                    <li data-tr="Oyun arayüzündeki metinlerin görünümü güncellendi. Ayrıca artık oyun bittiğinde gizli kelime ekranda görünecek."
+                        data-eng="The appearance of text in the game interface has been updated. Also, the hidden word will now be displayed when the game ends.">
+                        Oyun arayüzündeki metinlerin görünümü güncellendi. Ayrıca artık oyun bittiğinde gizli kelime ekranda görünecek.
+                    </li>
+                    <li data-tr="Kategori seçimi zorunlu hale getirildi. Herhangi bir kategori seçilmezse ekranda uyarı gösterilecek." 
+                        data-eng="Category selection is now mandatory. If no category is selected, a warning message will be displayed on screen.">
+                        Kategori seçimi zorunlu hale getirildi. Herhangi bir kategori seçilmezse ekranda uyarı gösterilecek.
                     </li>
                 </ul>
                 </div>

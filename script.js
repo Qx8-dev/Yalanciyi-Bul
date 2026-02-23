@@ -97,7 +97,6 @@ function updateGameSettings(){
     });
     localStorage.setItem('userGameSettings', JSON.stringify(gameSettings));
     console.log("Oyun ayarları LocalStorage'a kaydedildi.");
-    console.log(gameSettings.impostorShowWordLength)
 }
 
 function updateLanguage(...elementsToUpdate) {
@@ -138,11 +137,14 @@ function startGame(startButton) {
             }
             categoryIndexMap.set(key, wordList.length - 1); // son eklenen kelimenin indexi
         }
-        //console.log("categoryIndexMap : " + categoryIndexMap);
     }
     if (wordList.length === 0) {
         console.warn("No categories selected or no words available");
-        alert("Lütfen en az bir kategori seçin");
+        if (siteSettings.language === "tr"){
+            alert("Lütfen en az bir kategori seçin");
+        } else {
+            alert("Please select at least one category");
+        }
         return false;
     }
 
@@ -155,7 +157,6 @@ function startGame(startButton) {
             break;
         }
     }
-    //console.log("randint : "+ randint + " word is " + wordList[randint] + " word's category is " + wordCategory);
     theWord.word = wordList[randint];
     theWord.categorytr = categories[wordCategory].tr_description;
     theWord.categoryeng = categories[wordCategory].en_description;
@@ -271,7 +272,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const langSelect = document.querySelector("#language-select");
     langSelect.value = siteSettings.language;
     langSelect.addEventListener('change', (event) => {
-        //console.log(event);
         siteSettings.language = event.target.value;
         localStorage.setItem("lang", siteSettings.language);
         updateLanguage();
@@ -302,7 +302,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     deletePlayerNameInput();
                     if (currentValue < getCounterValue("counter-value-imposters")){
                         document.getElementById("counter-value-imposters").textContent = currentValue;
-                        console.log("Joke round.");
                         jokeRound = 1;
                         specialText.hidden = false;
                         specialText.dataset.tr = "Şaka turu aktif. Herkes sadece kendini yalancı olarak görecek.";
@@ -312,7 +311,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 } 
             }
             if(getCounterValue("counter-value-imposters") === 0){
-                console.log("Joke round.");
                 jokeRound = 2;
                 specialText.hidden = false;
                 specialText.dataset.tr = "Şaka turu aktif. Herkes kendini masum olarak görecek.";
@@ -335,7 +333,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }            
             }
             if(getCounterValue("counter-value-imposters") === getCounterValue("counter-value-players")){
-                console.log("Joke round.");
                 jokeRound = 1;
                 specialText.hidden = false;
                 specialText.dataset.tr = "Şaka turu aktif. Herkes sadece kendini yalancı olarak görecek.";
@@ -386,7 +383,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     playerNames[i] = input.value;
                 }
                 initializePlayers(playerCount, playerNames);
-                //console.log(players);
             }
             document.getElementById(currentElement.dataset.target).close();
         
