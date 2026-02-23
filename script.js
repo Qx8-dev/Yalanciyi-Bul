@@ -6,10 +6,11 @@ const siteSettings = {
 };
 
 let gameSettings = {
-    version: "v1.0.0-beta3",
+    version: "v1.0.0-beta4",
     sfxVolume: 80,
     rotatePlayerOrder: true,
     impostorClue: true,
+    impostorShowWordLength: true,
     impostersSeeOtherImposters: false,
     food:true,
     animals:true,
@@ -87,12 +88,16 @@ function updateGameSettings(){
         if (currentElement.id === "checkbox-imposter-clue"){
             gameSettings.impostorClue = currentElement.checked;
         }
+        if (currentElement.id === "checkbox-imposter-show-word-length"){
+            gameSettings.impostorShowWordLength = currentElement.checked;
+        }
         if (currentElement.id === "checkbox-imposters-see-other-imposters"){
             gameSettings.impostersSeeOtherImposters = currentElement.checked;
         }
     });
     localStorage.setItem('userGameSettings', JSON.stringify(gameSettings));
     console.log("Oyun ayarları LocalStorage'a kaydedildi.");
+    console.log(gameSettings.impostorShowWordLength)
 }
 
 function updateLanguage(...elementsToUpdate) {
@@ -157,7 +162,7 @@ function startGame(startButton) {
     
     document.getElementById(startButton.dataset.target).show();
 }
-
+ 
 function createPlayerNameInput(firstPlayerNumber, times=1) {
     const liarCounter = document.querySelector("#liar-counter");
     const isTurkish = siteSettings.language === "tr";
@@ -193,6 +198,15 @@ function deletePlayerNameInput() {
     liarCounter.previousElementSibling.remove();
 }
 
+function maskText(text) {
+    let words = text.split(' ');
+    let returnstring = "";
+    words.forEach(word => {
+        returnstring += `${'_ '.repeat(word.length)}(${word.length}) &nbsp;`;
+    });
+    return returnstring;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     //Load localstorage
     const savedGameSettings = localStorage.getItem('userGameSettings');
@@ -207,6 +221,10 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             'checkbox-imposter-clue': { 
                 jsName: 'impostorClue', 
+                defaultValue: true 
+            },
+            'checkbox-imposter-show-word-length': { 
+                jsName: 'impostorShowWordLength', 
                 defaultValue: true 
             },
             'checkbox-imposters-see-other-imposters': { 
@@ -242,9 +260,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        if (!gameSettings.version || gameSettings.version !== "v1.0.0-beta3"){
+        if (!gameSettings.version || gameSettings.version !== "v1.0.0-beta4"){
             console.log("Eski versiyon save tespit edildi. Ayarlar güncellendi.");
-            gameSettings.version = "v1.0.0-beta3";
+            gameSettings.version = "v1.0.0-beta4";
             localStorage.setItem('userGameSettings', JSON.stringify(gameSettings));
         }
     }
@@ -378,7 +396,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const gameButton = document.querySelector("#game-btn"); //for game start button
     const wordInfo = document.querySelector("#word-info");
     const hint = document.querySelector("#hint-info");
-
+    const lengthInfo = document.querySelector("#length-info");
     let gameButtonStateCount = 0;
     gameButton.addEventListener('click', ()=> {
         gameButtonStateCount++;
@@ -405,6 +423,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     hint.dataset.eng = `Category Hint : ${theWord.categoryeng}`;
                     hint.hidden = false;
                 }
+                if (gameSettings.impostorShowWordLength === true){
+                    lengthInfo.dataset.tr = `${maskText(theWord.word)}`;
+                    lengthInfo.dataset.eng = `${maskText(theWord.word)}`;
+                    lengthInfo.hidden = false;
+                }
                 if (gameSettings.impostersSeeOtherImposters && jokeRound === 0){
                     const otherLiars = getImposters().filter(p => (p.name !== players[currentPlayer].name)).map(p => p.name).join(", ");
                     if (otherLiars !== ""){
@@ -414,7 +437,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             wordInfo.hidden = false;
-            updateLanguage(turnText, gameButton, wordInfo, hint);
+            updateLanguage(turnText, gameButton, wordInfo, hint, lengthInfo);
         } else if (gameButtonStateCount % 2 === 0 && gameButtonStateCount < (getCounterValue("counter-value-players") * 2)) {
             turnText.dataset.tr = `Sıradaki Oyuncu : ${players[currentPlayer].name}`;
             turnText.dataset.eng = `${players[currentPlayer].name}'s turn`;
@@ -422,6 +445,7 @@ document.addEventListener('DOMContentLoaded', function() {
             gameButton.dataset.eng = "Show your word";
             wordInfo.hidden = true;
             hint.hidden = true;
+            lengthInfo.hidden = true;
             updateLanguage(turnText, gameButton);
         }
         else if (gameButtonStateCount === (getCounterValue("counter-value-players") * 2)){
@@ -431,6 +455,7 @@ document.addEventListener('DOMContentLoaded', function() {
             turnText.dataset.eng = "All players have seen their words. The game has started.";
             turnText.hidden = false;
             wordInfo.hidden = true;
+            lengthInfo.hidden = true;
             hint.hidden = true;
             updateLanguage(turnText, gameButton);
         }
@@ -452,6 +477,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 turnText.dataset.eng = `Liars : ${imposters.map(imp => imp.name).join(", ")}`;
             }
             wordInfo.hidden = false;
+            lengthInfo.hidden = true;
             wordInfo.dataset.tr = `Turun Kelimesi : ${theWord.word}`;
             wordInfo.dataset.eng = `Round's Word : ${theWord.word}`;
             turnText.hidden = false;
@@ -463,6 +489,7 @@ document.addEventListener('DOMContentLoaded', function() {
             gameButton.dataset.eng = "Show your word";
             wordInfo.hidden = true;
             hint.hidden = true;
+            lengthInfo.hidden = true;
             updateLanguage(turnText, gameButton, wordInfo, hint);
             if (gameSettings.rotatePlayerOrder) {
                 players.unshift(players.pop()); // rotate the players array

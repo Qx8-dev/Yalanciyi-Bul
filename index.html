@@ -94,6 +94,7 @@
                 <h2 hidden id="turn-info" data-tr="Defaultuser'ın sırası" data-eng="Defaultuser's turn" style="text-align: center;">turntext</h2>
                 <span class="italic-text" hidden id="word-info" data-tr="Kelimen: " data-eng="Your word: "style="text-align: center;"></span>
                 <span class="italic-text" hidden id="hint-info" data-tr="İpucu: " data-eng="Your hint: "style="text-align: center;"></span>
+                <span hidden id="length-info" data-tr="Kelimenin uzunluğu: " data-eng="Word length: "style="text-align: center;"></span>
                 <button id="game-btn" data-state="showWord" data-tr="Kelimeni göster" data-eng="Show the word"style="text-align: center;"></button>
             </div>
         </dialog>
@@ -122,7 +123,11 @@
                     </li>
                     <li>
                         <input type="checkbox" id="checkbox-imposter-clue" class="settings-checkbox" checked> 
-                        <label for="checkbox-imposter-clue" data-tr="Yalancı'ya ipucu ver" data-eng="Give hint to Imposter">Yalancı'ya ipucu ver</label>
+                        <label for="checkbox-imposter-clue" data-tr="Yalancı'ya kategori ipucusu ver" data-eng="Give category hint to Imposter">Yalancı'ya kategori ipucusu ver</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="checkbox-imposter-show-word-length" class="settings-checkbox" checked> 
+                        <label for="checkbox-imposter-show-word-length" data-tr="Yalancı'ya kelimenin harf sayısını göster (örn: _ _ _ _ _ _ _(7))" data-eng="Show word length to imposters (e.g. _ _ _ _ _ _ _(7))">Yalancı'ya kelimenin harf sayısını göster (örn: _ _ _ _ _ _ _(7))</label>
                     </li>
                     <li>
                         <input type="checkbox" id="checkbox-imposters-see-other-imposters" class="settings-checkbox"> 
