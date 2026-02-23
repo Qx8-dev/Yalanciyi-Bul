@@ -292,6 +292,10 @@ button:hover {
 	align-items: center;
 	gap: 15px;
 }
+
+.italic-text {
+	font-style: italic;
+}
 /*
 li:hover {
 	cursor: pointer;

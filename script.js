@@ -430,23 +430,23 @@ document.addEventListener('DOMContentLoaded', function() {
             gameButton.dataset.eng = "Close the Game";
             const imposters = getImposters();
             if (imposters.length === 1){
-                wordInfo.dataset.tr = `Yalancı : ${imposters.map(imp => imp.name).join(", ")}`;
-                wordInfo.dataset.eng = `Liar : ${imposters.map(imp => imp.name).join(", ")}`;
+                turnText.dataset.tr = `Yalancı : ${imposters.map(imp => imp.name).join(", ")}`;
+                turnText.dataset.eng = `Liar : ${imposters.map(imp => imp.name).join(", ")}`;
             } else if (jokeRound === 1){
-                wordInfo.dataset.tr = `Herkes yalancı! Hiç masum yoktu.<br> Bu bir şaka turuydu.`;
-                wordInfo.dataset.eng = `Everyone is a liar! There were no innocents. This was a joke round.`;
+                turnText.dataset.tr = `Herkes yalancı! Hiç masum yoktu.<br> Bu bir şaka turuydu.`;
+                turnText.dataset.eng = `Everyone is a liar! There were no innocents. This was a joke round.`;
             } else if (jokeRound === 2){
-                wordInfo.dataset.tr = `Herkes masum! Hiç yalancı yoktu.<br> Bu bir şaka turuydu.`;
-                wordInfo.dataset.eng = `Everyone is innocent! There were no liars. This was a joke round.`;
+                turnText.dataset.tr = `Herkes masum! Hiç yalancı yoktu.<br> Bu bir şaka turuydu.`;
+                turnText.dataset.eng = `Everyone is innocent! There were no liars. This was a joke round.`;
             } else{
-                wordInfo.dataset.tr = `Yalancılar : ${imposters.map(imp => imp.name).join(", ")}`;
-                wordInfo.dataset.eng = `Liars : ${imposters.map(imp => imp.name).join(", ")}`;
+                turnText.dataset.tr = `Yalancılar : ${imposters.map(imp => imp.name).join(", ")}`;
+                turnText.dataset.eng = `Liars : ${imposters.map(imp => imp.name).join(", ")}`;
             }
             wordInfo.hidden = false;
-            wordInfo.style.fontSize = "1.5em";
-            wordInfo.style.fontWeight = "bold";
-            turnText.hidden = true;
-            updateLanguage(gameButton, wordInfo);
+            wordInfo.dataset.tr = `Turun Kelimesi : ${theWord.word}`;
+            wordInfo.dataset.eng = `Round's Word : ${theWord.word}`;
+            turnText.hidden = false;
+            updateLanguage(gameButton, wordInfo, turnText);
         }
         else {
             gameButtonStateCount = 0;
