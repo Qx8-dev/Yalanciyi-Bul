@@ -157,6 +157,7 @@ function startGame(startButton) {
     
     document.getElementById(startButton.dataset.target).show();
 }
+
 function createPlayerNameInput(firstPlayerNumber, times=1) {
     const liarCounter = document.querySelector("#liar-counter");
     const isTurkish = siteSettings.language === "tr";
@@ -470,4 +471,13 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector("#modal-game").close();
         }
     });
+});
+document.addEventListener('click', function(event) {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+    if (modal.open && modal.id !== "modal-game") { // oyun modalında dışına tıklama kapalı
+        if (!event.composedPath().includes(modal) && !event.target.closest('.trigger-modal')) {
+            modal.close();
+        }
+    }});
 });
