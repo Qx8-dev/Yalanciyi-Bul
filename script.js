@@ -121,7 +121,7 @@ function applyTheme(newTheme) {
 }
 
 let categoryIndexMap = new Map(); // kategori isimlerini son eklenen kelimenin indexi ile eşleyecek
-function startGame(){
+function startGame(startButton) {
     const wordList = [];
     categoryIndexMap.clear();
     for (const key in gameSettings){
@@ -154,29 +154,36 @@ function startGame(){
     theWord.word = wordList[randint];
     theWord.categorytr = categories[wordCategory].tr_description;
     theWord.categoryeng = categories[wordCategory].en_description;
+    
+    document.getElementById(startButton.dataset.target).show();
 }
 function createPlayerNameInput(firstPlayerNumber, times=1) {
-    let currentValue = firstPlayerNumber;
+    const liarCounter = document.querySelector("#liar-counter");
+    const isTurkish = siteSettings.language === "tr";
+
     for (let i = 0; i < times; i++){
+        const playerNumber = firstPlayerNumber + i;
+
         const div = document.createElement("div");
         div.className = "player-name-container";
+
         const text = document.createElement(`label`);
-        text.dataset.eng = `Player ${currentValue}'s name : `;
-        text.dataset.tr = `Oyuncu ${currentValue} ismi : `;
+        text.dataset.eng = `Player ${playerNumber}'s name : `;
+        text.dataset.tr = `Oyuncu ${playerNumber} ismi : `;
+        
         const input = document.createElement("input");        
-        if (siteSettings.language === "tr"){
-            input.value = `Oyuncu ${currentValue}`;
+        if (isTurkish){
+            input.value = `Oyuncu ${playerNumber}`;
         } else {
-            input.value = `Player ${currentValue}`;
+            input.value = `Player ${playerNumber}`;
         }
-        div.appendChild(text);
-        div.appendChild(input);
-        const liarCounter = document.querySelector("#liar-counter");
-        liarCounter.parentNode.insertBefore(div, liarCounter);
-        input.id = `player${currentValue}-name-input`;
+        div.append(text, input);
+
+        input.id = `player${playerNumber}-name-input`;
         text.htmlFor = input.id;
+
         updateLanguage(text);
-        currentValue++;
+        liarCounter.parentNode.insertBefore(div, liarCounter);
     }
 }
 
@@ -337,11 +344,12 @@ document.addEventListener('DOMContentLoaded', function() {
     triggerButtons.forEach(function (currentElement){
         currentElement.addEventListener('click', () => {
             if (currentElement.id === "start-btn"){
-                startGame();
+                startGame(currentElement);
                 turnText.hidden = false;
                 turnText.dataset.tr = `Sıradaki Oyuncu : ${players[0].name}`;
                 turnText.dataset.eng = `${players[0].name}'s turn`;
                 updateLanguage(turnText);
+                return;
             }
             document.getElementById(currentElement.dataset.target).show();
             //showModal()
