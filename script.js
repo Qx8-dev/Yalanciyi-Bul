@@ -6,10 +6,11 @@ const siteSettings = {
 };
 
 let gameSettings = {
-    version: "v1.0.0-beta3",
+    version: "v1.0.0-beta4",
     sfxVolume: 80,
     rotatePlayerOrder: true,
     impostorClue: true,
+    impostorShowWordLength: true,
     impostersSeeOtherImposters: false,
     food:true,
     animals:true,
@@ -31,6 +32,7 @@ function getCounterValue(counterId) {
 }
 
 let players = [];
+let jokeRound = 0;
 
 function initializePlayers(count, playerNames) {
     players = [];
@@ -86,6 +88,9 @@ function updateGameSettings(){
         if (currentElement.id === "checkbox-imposter-clue"){
             gameSettings.impostorClue = currentElement.checked;
         }
+        if (currentElement.id === "checkbox-imposter-show-word-length"){
+            gameSettings.impostorShowWordLength = currentElement.checked;
+        }
         if (currentElement.id === "checkbox-imposters-see-other-imposters"){
             gameSettings.impostersSeeOtherImposters = currentElement.checked;
         }
@@ -120,7 +125,7 @@ function applyTheme(newTheme) {
 }
 
 let categoryIndexMap = new Map(); // kategori isimlerini son eklenen kelimenin indexi ile eşleyecek
-function startGame(){
+function startGame(startButton) {
     const wordList = [];
     categoryIndexMap.clear();
     for (const key in gameSettings){
@@ -132,10 +137,15 @@ function startGame(){
             }
             categoryIndexMap.set(key, wordList.length - 1); // son eklenen kelimenin indexi
         }
-        //console.log("categoryIndexMap : " + categoryIndexMap);
     }
     if (wordList.length === 0) {
         console.warn("No categories selected or no words available");
+        if (siteSettings.language === "tr"){
+            alert("Lütfen en az bir kategori seçin");
+        } else {
+            alert("Please select at least one category");
+        }
+        return false;
     }
 
     //randomly select a word from wordList
@@ -147,39 +157,55 @@ function startGame(){
             break;
         }
     }
-    //console.log("randint : "+ randint + " word is " + wordList[randint] + " word's category is " + wordCategory);
     theWord.word = wordList[randint];
     theWord.categorytr = categories[wordCategory].tr_description;
     theWord.categoryeng = categories[wordCategory].en_description;
+    
+    document.getElementById(startButton.dataset.target).show();
 }
+ 
 function createPlayerNameInput(firstPlayerNumber, times=1) {
-    let currentValue = firstPlayerNumber;
+    const liarCounter = document.querySelector("#liar-counter");
+    const isTurkish = siteSettings.language === "tr";
+
     for (let i = 0; i < times; i++){
+        const playerNumber = firstPlayerNumber + i;
+
         const div = document.createElement("div");
         div.className = "player-name-container";
+
         const text = document.createElement(`label`);
-        text.dataset.eng = `Player ${currentValue}'s name : `;
-        text.dataset.tr = `Oyuncu ${currentValue} ismi : `;
+        text.dataset.eng = `Player ${playerNumber}'s name : `;
+        text.dataset.tr = `Oyuncu ${playerNumber} ismi : `;
+        
         const input = document.createElement("input");        
-        if (siteSettings.language === "tr"){
-            input.value = `Oyuncu ${currentValue}`;
+        if (isTurkish){
+            input.value = `Oyuncu ${playerNumber}`;
         } else {
-            input.value = `Player ${currentValue}`;
+            input.value = `Player ${playerNumber}`;
         }
-        div.appendChild(text);
-        div.appendChild(input);
-        const liarCounter = document.querySelector("#liar-counter");
-        liarCounter.parentNode.insertBefore(div, liarCounter);
-        input.id = `player${currentValue}-name-input`;
+        div.append(text, input);
+
+        input.id = `player${playerNumber}-name-input`;
         text.htmlFor = input.id;
+
         updateLanguage(text);
-        currentValue++;
+        liarCounter.parentNode.insertBefore(div, liarCounter);
     }
 }
 
 function deletePlayerNameInput() {
     const liarCounter = document.querySelector("#liar-counter");
     liarCounter.previousElementSibling.remove();
+}
+
+function maskText(text) {
+    let words = text.split(' ');
+    let returnstring = "";
+    words.forEach(word => {
+        returnstring += `${'_ '.repeat(word.length)}(${word.length}) &nbsp;`;
+    });
+    return returnstring;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -196,6 +222,10 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             'checkbox-imposter-clue': { 
                 jsName: 'impostorClue', 
+                defaultValue: true 
+            },
+            'checkbox-imposter-show-word-length': { 
+                jsName: 'impostorShowWordLength', 
                 defaultValue: true 
             },
             'checkbox-imposters-see-other-imposters': { 
@@ -231,9 +261,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        if (!gameSettings.version || gameSettings.version !== "v1.0.0-beta3"){
+        if (!gameSettings.version || gameSettings.version !== "v1.0.0-beta4"){
             console.log("Eski versiyon save tespit edildi. Ayarlar güncellendi.");
-            gameSettings.version = "1.0.0-beta3";
+            gameSettings.version = "v1.0.0-beta4";
             localStorage.setItem('userGameSettings', JSON.stringify(gameSettings));
         }
     }
@@ -242,7 +272,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const langSelect = document.querySelector("#language-select");
     langSelect.value = siteSettings.language;
     langSelect.addEventListener('change', (event) => {
-        //console.log(event);
         siteSettings.language = event.target.value;
         localStorage.setItem("lang", siteSettings.language);
         updateLanguage();
@@ -258,33 +287,58 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const btnDecrease = document.querySelectorAll('.counter-decrease-btn');
     const btnIncrease = document.querySelectorAll('.counter-increase-btn');
+    const specialText = document.getElementById("special-text")
     //const counterDisplay = document.querySelectorAll('.counter-value');
 
     btnDecrease.forEach(function (currentElement){
         currentElement.addEventListener('click', () => {
             let currentValue = parseInt(currentElement.nextElementSibling.textContent);
-            if ((currentValue > 1 && currentElement.dataset.target === "imposters") || (currentValue > 3 && currentElement.dataset.target === "players")) {
+            if ((currentValue > 0 && currentElement.dataset.target === "imposters") || (currentValue > 3 && currentElement.dataset.target === "players")) {
                 currentValue -= 1;
+                jokeRound = 0;
+                document.getElementById("special-text").hidden = true;
                 currentElement.nextElementSibling.textContent = currentValue;
                 if (currentElement.dataset.target === "players"){
                     deletePlayerNameInput();
+                    if (currentValue < getCounterValue("counter-value-imposters")){
+                        document.getElementById("counter-value-imposters").textContent = currentValue;
+                        jokeRound = 1;
+                        specialText.hidden = false;
+                        specialText.dataset.tr = "Şaka turu aktif. Herkes sadece kendini yalancı olarak görecek.";
+                        specialText.dataset.eng = "Joke round active. Everyone sees themselves as the only imposter.";
+                        updateLanguage(specialText);
+                    }
                 } 
-            }   
+            }
+            if(getCounterValue("counter-value-imposters") === 0){
+                jokeRound = 2;
+                specialText.hidden = false;
+                specialText.dataset.tr = "Şaka turu aktif. Herkes kendini masum olarak görecek.";
+                specialText.dataset.eng = "Joke round active. Everyone sees themselves as innocent.";
+                updateLanguage(specialText);
+            }
         });
+
     });
     btnIncrease.forEach(function (currentElement){
         currentElement.addEventListener('click', () => {
             let currentValue = parseInt(currentElement.previousElementSibling.textContent);
-            if (currentValue < 10 && (currentElement.dataset.target === "players" || currentValue < getCounterValue("counter-value-players") - 1)) {
+            if (currentValue < 10 && (currentElement.dataset.target === "players" || currentValue < getCounterValue("counter-value-players"))) {
                 currentValue += 1;
+                jokeRound = 0;
+                specialText.hidden = true;
                 currentElement.previousElementSibling.textContent = currentValue;
                 if (currentElement.dataset.target === "players"){
                     createPlayerNameInput(currentValue);
                 }            
             }
-            //if(getCounterValue("counter-value-imposters") === getCounterValue("counter-value-players")){
-            //    console.log("Joke run.");
-            //}
+            if(getCounterValue("counter-value-imposters") === getCounterValue("counter-value-players")){
+                jokeRound = 1;
+                specialText.hidden = false;
+                specialText.dataset.tr = "Şaka turu aktif. Herkes sadece kendini yalancı olarak görecek.";
+                specialText.dataset.eng = "Joke round active. Everyone sees themselves as the only imposter.";
+                updateLanguage(specialText);
+            }
         });
     });
 
@@ -306,11 +360,12 @@ document.addEventListener('DOMContentLoaded', function() {
     triggerButtons.forEach(function (currentElement){
         currentElement.addEventListener('click', () => {
             if (currentElement.id === "start-btn"){
-                startGame();
+                startGame(currentElement);
                 turnText.hidden = false;
                 turnText.dataset.tr = `Sıradaki Oyuncu : ${players[0].name}`;
                 turnText.dataset.eng = `${players[0].name}'s turn`;
                 updateLanguage(turnText);
+                return;
             }
             document.getElementById(currentElement.dataset.target).show();
             //showModal()
@@ -328,7 +383,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     playerNames[i] = input.value;
                 }
                 initializePlayers(playerCount, playerNames);
-                //console.log(players);
             }
             document.getElementById(currentElement.dataset.target).close();
         
@@ -338,7 +392,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const gameButton = document.querySelector("#game-btn"); //for game start button
     const wordInfo = document.querySelector("#word-info");
     const hint = document.querySelector("#hint-info");
-
+    const lengthInfo = document.querySelector("#length-info");
     let gameButtonStateCount = 0;
     gameButton.addEventListener('click', ()=> {
         gameButtonStateCount++;
@@ -365,7 +419,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     hint.dataset.eng = `Category Hint : ${theWord.categoryeng}`;
                     hint.hidden = false;
                 }
-                if (gameSettings.impostersSeeOtherImposters){
+                if (gameSettings.impostorShowWordLength === true){
+                    lengthInfo.dataset.tr = `${maskText(theWord.word)}`;
+                    lengthInfo.dataset.eng = `${maskText(theWord.word)}`;
+                    lengthInfo.hidden = false;
+                }
+                if (gameSettings.impostersSeeOtherImposters && jokeRound === 0){
                     const otherLiars = getImposters().filter(p => (p.name !== players[currentPlayer].name)).map(p => p.name).join(", ");
                     if (otherLiars !== ""){
                         wordInfo.dataset.tr += `Diğer yalancılar : ${otherLiars}`;
@@ -374,7 +433,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             wordInfo.hidden = false;
-            updateLanguage(turnText, gameButton, wordInfo, hint);
+            updateLanguage(turnText, gameButton, wordInfo, hint, lengthInfo);
         } else if (gameButtonStateCount % 2 === 0 && gameButtonStateCount < (getCounterValue("counter-value-players") * 2)) {
             turnText.dataset.tr = `Sıradaki Oyuncu : ${players[currentPlayer].name}`;
             turnText.dataset.eng = `${players[currentPlayer].name}'s turn`;
@@ -382,6 +441,7 @@ document.addEventListener('DOMContentLoaded', function() {
             gameButton.dataset.eng = "Show your word";
             wordInfo.hidden = true;
             hint.hidden = true;
+            lengthInfo.hidden = true;
             updateLanguage(turnText, gameButton);
         }
         else if (gameButtonStateCount === (getCounterValue("counter-value-players") * 2)){
@@ -391,6 +451,7 @@ document.addEventListener('DOMContentLoaded', function() {
             turnText.dataset.eng = "All players have seen their words. The game has started.";
             turnText.hidden = false;
             wordInfo.hidden = true;
+            lengthInfo.hidden = true;
             hint.hidden = true;
             updateLanguage(turnText, gameButton);
         }
@@ -399,17 +460,24 @@ document.addEventListener('DOMContentLoaded', function() {
             gameButton.dataset.eng = "Close the Game";
             const imposters = getImposters();
             if (imposters.length === 1){
-                wordInfo.dataset.tr = `Yalancı : ${imposters.map(imp => imp.name).join(", ")}`;
-                wordInfo.dataset.eng = `Liar : ${imposters.map(imp => imp.name).join(", ")}`;
-            } else {
-                wordInfo.dataset.tr = `Yalancılar : ${imposters.map(imp => imp.name).join(", ")}`;
-                wordInfo.dataset.eng = `Liars : ${imposters.map(imp => imp.name).join(", ")}`;
+                turnText.dataset.tr = `Yalancı : ${imposters.map(imp => imp.name).join(", ")}`;
+                turnText.dataset.eng = `Liar : ${imposters.map(imp => imp.name).join(", ")}`;
+            } else if (jokeRound === 1){
+                turnText.dataset.tr = `Herkes yalancı! Hiç masum yoktu.<br> Bu bir şaka turuydu.`;
+                turnText.dataset.eng = `Everyone is a liar! There were no innocents. This was a joke round.`;
+            } else if (jokeRound === 2){
+                turnText.dataset.tr = `Herkes masum! Hiç yalancı yoktu.<br> Bu bir şaka turuydu.`;
+                turnText.dataset.eng = `Everyone is innocent! There were no liars. This was a joke round.`;
+            } else{
+                turnText.dataset.tr = `Yalancılar : ${imposters.map(imp => imp.name).join(", ")}`;
+                turnText.dataset.eng = `Liars : ${imposters.map(imp => imp.name).join(", ")}`;
             }
             wordInfo.hidden = false;
-            wordInfo.style.fontSize = "1.5em";
-            wordInfo.style.fontWeight = "bold";
-            turnText.hidden = true;
-            updateLanguage(gameButton, wordInfo);
+            lengthInfo.hidden = true;
+            wordInfo.dataset.tr = `Turun Kelimesi : ${theWord.word}`;
+            wordInfo.dataset.eng = `Round's Word : ${theWord.word}`;
+            turnText.hidden = false;
+            updateLanguage(gameButton, wordInfo, turnText);
         }
         else {
             gameButtonStateCount = 0;
@@ -417,6 +485,7 @@ document.addEventListener('DOMContentLoaded', function() {
             gameButton.dataset.eng = "Show your word";
             wordInfo.hidden = true;
             hint.hidden = true;
+            lengthInfo.hidden = true;
             updateLanguage(turnText, gameButton, wordInfo, hint);
             if (gameSettings.rotatePlayerOrder) {
                 players.unshift(players.pop()); // rotate the players array
@@ -425,4 +494,13 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector("#modal-game").close();
         }
     });
+});
+document.addEventListener('click', function(event) {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+    if (modal.open && modal.id !== "modal-game") { // oyun modalında dışına tıklama kapalı
+        if (!event.composedPath().includes(modal) && !event.target.closest('.trigger-modal')) {
+            modal.close();
+        }
+    }});
 });
